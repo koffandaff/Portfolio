@@ -488,8 +488,8 @@ function ProjectsSection() {
           <FlowSection key={i} style={{ backgroundColor: '#0C0C0C', color: '#fff', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-400">{proj.num} — {proj.title}</p>
             <hr className="my-[2vw] border-none border-t border-white/10" />
-            <div className="flex flex-col md:flex-row gap-10 h-full pb-10">
-              <div className="flex-1 flex flex-col">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-10 flex-1 pb-10">
+              <div className="w-full md:flex-1 flex flex-col">
                 <h1 className="text-[clamp(2rem,6vw,7rem)] font-bold leading-[1.1] uppercase tracking-tight break-words">{proj.title}</h1>
                 <p className="mt-8 max-w-[50ch] text-[clamp(1rem,1.3vw,1.3rem)] font-normal leading-relaxed text-white/70">
                   {proj.desc}
@@ -510,7 +510,7 @@ function ProjectsSection() {
                    </div>
                 </div>
               </div>
-              <a href={proj.link} target="_blank" rel="noreferrer" className="flex-1 group relative bg-black rounded-3xl overflow-hidden border border-white/10 flex items-center justify-center p-2 transition-colors hover:border-sky-500/50 cursor-pointer shadow-2xl block h-[400px] md:h-auto">
+              <a href={proj.link} target="_blank" rel="noreferrer" className="w-full md:flex-1 group relative bg-black rounded-3xl overflow-hidden border border-white/10 flex items-center justify-center p-2 transition-colors hover:border-sky-500/50 cursor-pointer shadow-2xl block h-[300px] sm:h-[400px] md:h-auto min-h-[300px] md:min-h-0">
                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-8 z-20">
                     <span className="bg-sky-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-sky-500/20">
                        Launch Project <ExternalLink size={20} />
@@ -520,7 +520,7 @@ function ProjectsSection() {
                     src={proj.image} 
                     alt={proj.title} 
                     fill
-                    className="object-contain md:object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-700 ease-out relative z-10" 
+                    className="object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-700 ease-out relative z-10" 
                   />
               </a>
             </div>
