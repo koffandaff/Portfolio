@@ -28,7 +28,8 @@ import {
 const TEXTUREMAP = { src: 'https://i.postimg.cc/XYwvXN8D/img-4.png' };
 const DEPTHMAP = { src: 'https://i.postimg.cc/2SHKQh2q/raw-4.webp' };
 
-extend(THREE as unknown as { [key: string]: unknown });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+extend(THREE as any);
 
 // Post Processing component
 const PostProcessing = ({
@@ -43,7 +44,8 @@ const PostProcessing = ({
   const { gl, scene, camera } = useThree();
 
   const render = useMemo(() => {
-    const postProcessing = new THREE.PostProcessing(gl as unknown as THREE.Renderer);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const postProcessing = new THREE.PostProcessing(gl as any);
     const uScanProgress = uniform(0);
 
     const scenePass = pass(scene, camera);
@@ -234,7 +236,8 @@ export const HeroFuturistic = () => {
         <Canvas
           flat
           gl={async (props) => {
-            const renderer = new THREE.WebGPURenderer(props as unknown as THREE.WebGPURendererParameters);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const renderer = new THREE.WebGPURenderer(props as any);
             await renderer.init();
             return renderer;
           }}
