@@ -1,0 +1,2655 @@
+we are going to make a portfolio site of mine use nextjs and frammer motion glass ui and all the inspiration and theme and detail will be bellow
+first of these is me and all my data
+@contextScopeItemMention @contextScopeItemMention 
+
+in these pdf social links and eductions achivemnets as open sourice experince and letter of recommendation and all live projects and all is there
+
+recommendation letter google docs link: https://docs.google.com/document/d/1WrBrdZuaNP6Yw6CIC5S2trTLNkKZtsoDgmszZKGYJEY/edit?usp=sharing
+
+resume google docs link:
+https://docs.google.com/document/d/1b5B-nR_s-89PK2Q9Ssc58Plmmabhq0YI-2WpIYtSu-k/edit?usp=sharing
+
+
+important texts and all theme:
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+text-scramble.tsx
+"use client"
+
+import { useState, useCallback, useRef, useEffect } from "react"
+
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*"
+
+interface TextScrambleProps {
+  text: string
+  className?: string
+}
+
+export function TextScramble({ text, className = "" }: TextScrambleProps) {
+  const [displayText, setDisplayText] = useState(text)
+  const [isHovering, setIsHovering] = useState(false)
+  const [isScrambling, setIsScrambling] = useState(false)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const frameRef = useRef(0)
+
+  const scramble = useCallback(() => {
+    setIsScrambling(true)
+    frameRef.current = 0
+    const duration = text.length * 3
+
+    if (intervalRef.current) clearInterval(intervalRef.current)
+
+    intervalRef.current = setInterval(() => {
+      frameRef.current++
+
+      const progress = frameRef.current / duration
+      const revealedLength = Math.floor(progress * text.length)
+
+      const newText = text
+        .split("")
+        .map((char, i) => {
+          if (char === " ") return " "
+          if (i < revealedLength) return text[i]
+          return CHARS[Math.floor(Math.random() * CHARS.length)]
+        })
+        .join("")
+
+      setDisplayText(newText)
+
+      if (frameRef.current >= duration) {
+        if (intervalRef.current) clearInterval(intervalRef.current)
+        setDisplayText(text)
+        setIsScrambling(false)
+      }
+    }, 30)
+  }, [text])
+
+  const handleMouseEnter = () => {
+    setIsHovering(true)
+    scramble()
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovering(false)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+  }, [])
+
+  return (
+    <div
+      className={`group relative inline-flex flex-col cursor-pointer select-none ${className}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <span className="relative font-mono text-lg tracking-widest uppercase">
+        {displayText.split("").map((char, i) => (
+          <span
+            key={i}
+            className={`inline-block transition-all duration-150 ${
+              isScrambling && char !== text[i] ? "text-primary scale-110" : "text-foreground"
+            }`}
+            style={{
+              transitionDelay: `${i * 10}ms`,
+            }}
+          >
+            {char}
+          </span>
+        ))}
+      </span>
+
+      {/* Animated underline */}
+      <span className="relative h-px w-full mt-2 overflow-hidden">
+        <span
+          className={`absolute inset-0 bg-foreground transition-transform duration-500 ease-out origin-left ${
+            isHovering ? "scale-x-100" : "scale-x-0"
+          }`}
+        />
+        <span className="absolute inset-0 bg-border" />
+      </span>
+
+      {/* Subtle glow on hover */}
+      <span
+        className={`absolute -inset-4 rounded-lg bg-primary/5 transition-opacity duration-300 -z-10 ${
+          isHovering ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </div>
+  )
+}
+
+
+demo.tsx
+import { TextScramble } from "@/components/ui/text-scramble";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center gap-20 bg-background px-6">
+      <div className="text-center space-y-3">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground font-mono">Hover to decode</p>
+      </div>
+
+      <div className="flex flex-col items-center gap-12">
+        <TextScramble text="VIEW WORK" />
+      </div>
+
+      <p className="text-xs text-muted-foreground font-mono tracking-wide">[ kinetic typography ]</p>
+    </main>
+  )
+}
+
+```
+
+Extend existing Tailwind 4 index.css with this code (or if project uses Tailwind 3, extend tailwind.config.js or globals.css):
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --primary: oklch(0.85 0.15 55);
+}
+
+.dark {
+  --primary: oklch(0.85 0.15 55);
+}
+
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+
+
+theme and base inspiration for ui for sections  from these:
+Build a 3D Creator portfolio landing page for "Jack" using React, TypeScript, Tailwind CSS, Framer Motion, and Lucide React. The page has a dark theme (#0C0C0C background) with the font Kanit (Google Fonts, weights 300-900). The page title is "Jack -- 3D Creator".
+
+GLOBAL STYLES
+Background: #0C0C0C on html, body, #root, and the main wrapper
+Font family: 'Kanit', sans-serif
+Global reset: box-sizing border-box, margin 0, padding 0
+CSS class .hero-heading: gradient text using background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%) with -webkit-background-clip: text and -webkit-text-fill-color: transparent
+Main wrapper has overflowX: 'clip'
+SECTION ORDER
+HeroSection
+MarqueeSection
+AboutSection
+ServicesSection
+ProjectsSection
+1. HERO SECTION
+Full viewport height (h-screen), flex column layout with overflowX: clip.
+
+Navbar: Horizontal nav bar with 4 links -- "About", "Price", "Projects", "Contact" -- evenly spaced with justify-between. Text color #D7E2EA, font-medium, uppercase, tracking-wider. Sizes: text-sm md:text-lg lg:text-[1.4rem]. Padding: px-6 md:px-10 pt-6 md:pt-8. Hover: opacity 70% with 200ms transition.
+
+Hero Heading: Massive h1 with text "Hi, i'm jack" (lowercase "i", curly apostrophe via &apos;). Uses the .hero-heading gradient text class. Font-black, uppercase, tracking-tight, leading-none, whitespace-nowrap, w-full. Font sizes: text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw]. Margin top: mt-6 sm:mt-4 md:-mt-5. Wrapped in overflow-hidden container.
+
+Bottom bar: Flexbox justify-between items-end with pb-7 sm:pb-8 md:pb-10:
+
+Left: paragraph text "a 3d creator driven by crafting striking and unforgettable projects", color #D7E2EA, font-light, uppercase, tracking-wide, leading-snug. Font size: clamp(0.75rem, 1.4vw, 1.5rem). Max-width: max-w-[160px] sm:max-w-[220px] md:max-w-[260px].
+Right: ContactButton component (see below)
+Hero Portrait: Centered absolutely. Uses a Magnet component (mouse-following magnetic effect) wrapping an image. Image URL: https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png. Magnet settings: padding 150, strength 3, activeTransition "transform 0.3s ease-out", inactiveTransition "transform 0.6s ease-in-out". Positioning: absolute left-1/2 -translate-x-1/2 z-10. Width: w-[280px] sm:w-[360px] md:w-[440px] lg:w-[520px]. On mobile: top-1/2 -translate-y-1/2. On sm+: sm:top-auto sm:translate-y-0 sm:bottom-0.
+
+FadeIn animations: Navbar fades in with delay 0, y -20. Heading: delay 0.15, y 40. Left text: delay 0.35, y 20. Contact button: delay 0.5, y 20. Portrait: delay 0.6, y 30.
+
+2. MARQUEE SECTION
+Two rows of images that scroll horizontally based on page scroll position. Background #0C0C0C. Padding: pt-24 sm:pt-32 md:pt-40 pb-10.
+
+21 GIF images from motionsites.ai (exact URLs):
+
+
+https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif
+https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif
+https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif
+https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif
+https://motionsites.ai/assets/hero-asme-preview-B_nGDnTP.gif
+https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif
+https://motionsites.ai/assets/hero-vitara-preview-Cjz2QYyU.gif
+https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif
+https://motionsites.ai/assets/hero-skyelite-preview-DHaZIgUv.gif
+https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif
+https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif
+https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif
+https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif
+https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif
+https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif
+https://motionsites.ai/assets/hero-evr-ventures-preview-DZxeVFEX.gif
+https://motionsites.ai/assets/hero-planet-orbit-preview-DWAP8Z1P.gif
+https://motionsites.ai/assets/hero-new-era-preview-CocuDUm9.gif
+https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif
+https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif
+https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif
+Row 1: first 11 images, tripled for seamless scrolling. Moves RIGHT on scroll (translateX(offset - 200)).
+Row 2: remaining 10 images, tripled. Moves LEFT on scroll (translateX(-(offset - 200))).
+Scroll offset calculated as: (window.scrollY - sectionTop + window.innerHeight) * 0.3
+Each image tile: 420px x 270px, rounded-2xl, object-cover, lazy loaded.
+Gap between tiles: gap-3. Gap between rows: gap-3.
+Uses willChange: 'transform' for performance. Scroll listener is passive.
+3. ABOUT SECTION
+Full-height centered section with min-h-screen, padding px-5 sm:px-8 md:px-10 py-20.
+
+Four decorative 3D images positioned absolutely in corners:
+
+Top-left: Moon icon -- https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png -- w-[120px] sm:w-[160px] md:w-[210px], positioned top-[4%] left-[1%] sm:left-[2%] md:left-[4%]. FadeIn: delay 0.1, x -80, y 0, duration 0.9.
+Bottom-left: 3D object -- https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png -- w-[100px] sm:w-[140px] md:w-[180px], positioned bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%]. FadeIn: delay 0.25, x -80, y 0, duration 0.9.
+Top-right: Lego icon -- https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png -- w-[120px] sm:w-[160px] md:w-[210px], positioned top-[4%] right-[1%] sm:right-[2%] md:right-[4%]. FadeIn: delay 0.15, x 80, y 0, duration 0.9.
+Bottom-right: 3D group -- https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png -- w-[130px] sm:w-[170px] md:w-[220px], positioned bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%]. FadeIn: delay 0.3, x 80, y 0, duration 0.9.
+Heading: "About me" using .hero-heading gradient text, font-black, uppercase, leading-none, tracking-tight, centered. Font size: clamp(3rem, 12vw, 160px). FadeIn: delay 0, y 40.
+
+Animated paragraph: Uses a character-by-character scroll-driven opacity animation. Text: "With more than five years of experience in design, i focus on branding, web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!" -- color #D7E2EA, font-medium, centered, leading-relaxed, max-w-[560px], font size clamp(1rem, 2vw, 1.35rem). Each character animates from opacity 0.2 to 1 based on scroll progress, with scroll offset ['start 0.8', 'end 0.2'].
+
+Contact button below the text block. Gap between heading/text: gap-10 sm:gap-14 md:gap-16. Gap between text block and button: gap-16 sm:gap-20 md:gap-24.
+
+4. SERVICES SECTION
+White background (#FFFFFF), with rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] top corners. Padding: px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32.
+
+Heading: "Services" in #0C0C0C, font-black, uppercase, centered, font size clamp(3rem, 12vw, 160px). Margin bottom: mb-16 sm:mb-20 md:mb-28.
+
+5 service items in a vertical list, max-w-5xl, centered:
+
+01 - 3D Modeling: "Creation of detailed objects, characters, or environments tailored to specific client needs, ideal for games, products, and visualizations."
+02 - Rendering: "High-quality, photorealistic renders that showcase designs with custom lighting, textures, and materials to bring concepts to life."
+03 - Motion Design: "Dynamic animations and motion graphics that add energy and storytelling to brands, products, and digital experiences."
+04 - Branding: "Crafting cohesive visual identities -- from logos to full brand systems -- that communicate a clear and memorable presence."
+05 - Web Design: "Designing clean, modern, and conversion-focused websites with attention to layout, typography, and user experience."
+Each item: horizontal layout with number (font-black, font size clamp(3rem, 10vw, 140px), color #0C0C0C) on the left and name + description stacked vertically on the right. Name: font-medium, uppercase, font size clamp(1rem, 2.2vw, 2.1rem). Description: font-light, leading-relaxed, max-w-2xl, font size clamp(0.85rem, 1.6vw, 1.25rem), opacity 0.6. Items separated by 1px borders (rgba(12, 12, 12, 0.15)). Padding: py-8 sm:py-10 md:py-12. Staggered FadeIn: each item delays by i * 0.1.
+
+5. PROJECTS SECTION
+Dark background (#0C0C0C), rounded top corners rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px], pulled up with -mt-10 sm:-mt-12 md:-mt-14, z-10.
+
+Heading: "Project" (singular) using .hero-heading gradient, same styling as other headings.
+
+3 sticky-stacking project cards that scale down as you scroll past them (card stacking effect using Framer Motion useScroll and useTransform). Each card is sticky top-24 md:top-32 inside an h-[85vh] container.
+
+Scale calculation: targetScale = 1 - (totalCards - 1 - index) * 0.03. Each card offset by top: ${index * 28}px.
+
+Each card has: rounded-[40px] sm:rounded-[50px] md:rounded-[60px], border-2 border-[#D7E2EA], background #0C0C0C, padding p-4 sm:p-6 md:p-8.
+
+Card layout:
+
+Top row: Number (huge, same style as services), category label, project name, and a "Live Project" ghost button (rounded-full, border-2 #D7E2EA, uppercase, tracking-widest).
+Bottom row: Two-column image grid -- left column (40% width) has 2 stacked images, right column (60%) has 1 tall image. All images have heavy border radius rounded-[40px] sm:rounded-[50px] md:rounded-[60px]. Left top image height: clamp(130px, 16vw, 230px). Left bottom image height: clamp(160px, 22vw, 340px).
+Project data with CloudFront image URLs:
+
+Project 01 - "Nextlevel Studio" (Client):
+
+Col1 image 1: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85
+Col1 image 2: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png&w=1280&q=85
+Col2 image: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png&w=1280&q=85
+Project 02 - "Aura Brand Identity" (Personal):
+
+Col1 image 1: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f.png&w=1280&q=85
+Col1 image 2: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1.png&w=1280&q=85
+Col2 image: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea.png&w=1280&q=85
+Project 03 - "Solaris Digital" (Client):
+
+Col1 image 1: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f.png&w=1280&q=85
+Col1 image 2: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b.png&w=1280&q=85
+Col2 image: https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055818_9d062121-ad7e-46b9-999a-1a6a692ef1ee.png&w=1280&q=85
+REUSABLE COMPONENTS
+ContactButton: Rounded-full pill button with gradient background linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%), inner box-shadow 0px 4px 4px rgba(181, 1, 167, 0.25), 4px 4px 12px #7721B1 inset, white 2px outline with -3px offset. Text: white, font-medium, uppercase, tracking-widest. Sizes: px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4, text text-xs sm:text-sm md:text-base. Label: "Contact Me".
+
+LiveProjectButton: Ghost/outline pill button. Rounded-full, border-2 border-[#D7E2EA], text color #D7E2EA, font-medium, uppercase, tracking-widest. Sizes: px-8 py-3 sm:px-10 sm:py-3.5, text text-sm sm:text-base. Hover: bg-[#D7E2EA]/10. Label: "Live Project".
+
+FadeIn: Framer Motion wrapper using whileInView with viewport={{ once: true, margin: "50px", amount: 0 }}. Accepts delay, duration (default 0.7), x (default 0), y (default 30). Easing: [0.25, 0.1, 0.25, 1]. Uses motion.create() for dynamic element types.
+
+Magnet: Mouse-following magnetic hover effect. Tracks mouse position relative to element center, applies translate3d transform divided by strength factor. Activates when cursor is within padding distance of element edge. Smooth transition in (0.3s ease-out) and out (0.6s ease-in-out). Uses willChange: 'transform'.
+
+AnimatedText: Character-by-character scroll-reveal text animation. Each character goes from opacity 0.2 to 1 based on its position in the text relative to scroll progress. Uses Framer Motion useScroll targeting the paragraph element with offset ['start 0.8', 'end 0.2']. Each character uses invisible placeholder + absolute positioned animated span.
+
+KEY DEPENDENCIES
+react, react-dom (^18.3.1)
+framer-motion (^12.38.0)
+lucide-react (^0.344.0)
+tailwindcss (^3.4.1)
+vite, typescript
+RESPONSIVE BREAKPOINTS
+All sections use Tailwind's default breakpoints (sm: 640px, md: 768px, lg: 1024px) with mobile-first approach. Heavy use of clamp() for fluid typography. The entire design scales gracefully from mobile to ultra-wide screens.
+
+project section from this:
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+story-scroll.tsx
+'use client';
+
+import React, { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
+
+function cx(...parts: Array<string | undefined | false | null>): string {
+  return parts.filter(Boolean).join(' ');
+}
+
+export interface FlowSectionProps {
+  className?: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+  'aria-label'?: string;
+}
+
+export const FlowSection: React.FC<FlowSectionProps> = ({
+  className,
+  style = {},
+  children,
+  'aria-label': ariaLabel,
+}) => (
+  <section
+    data-flow-section
+    aria-label={ariaLabel}
+    className={cx('relative min-h-screen w-full overflow-hidden', className)}
+  >
+    <div
+      data-flow-inner
+      className={cx(
+        'flow-art-container relative flex min-h-screen w-full flex-col justify-between gap-6 px-[4vw] pt-[clamp(2rem,8vw,4vw)] pb-[4vw]',
+        'will-change-transform',
+      )}
+      style={{ transformOrigin: 'bottom left', ...style }}
+    >
+      {children}
+    </div>
+  </section>
+);
+
+export interface FlowArtProps {
+  children: React.ReactNode;
+  className?: string;
+  'aria-label'?: string;
+}
+
+const childCount = (children: React.ReactNode) => React.Children.count(children);
+
+const FlowArt: React.FC<FlowArtProps> = ({
+  children,
+  className,
+  'aria-label': ariaLabel = 'Story scroll',
+}) => {
+  const containerRef = useRef<HTMLElement>(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  useGSAP(
+    () => {
+      if (!containerRef.current || reducedMotion) return;
+
+      const sections = Array.from(
+        containerRef.current.querySelectorAll<HTMLElement>('[data-flow-section]'),
+      );
+      if (sections.length === 0) return;
+
+      const triggers: ScrollTrigger[] = [];
+
+      sections.forEach((section, i) => {
+        gsap.set(section, { zIndex: i + 1 });
+
+        const inner = section.querySelector<HTMLElement>('.flow-art-container');
+        if (!inner) return;
+
+        if (i > 0) {
+          gsap.set(inner, { rotation: 30, transformOrigin: 'bottom left' });
+          const tween = gsap.to(inner, {
+            rotation: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top bottom',
+              end: 'top 25%',
+              scrub: true,
+            },
+          });
+          if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
+        }
+
+        if (i < sections.length - 1) {
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: section,
+              start: 'bottom bottom',
+              end: 'bottom top',
+              pin: true,
+              pinSpacing: false,
+            }),
+          );
+        }
+      });
+
+      ScrollTrigger.refresh();
+
+      return () => {
+        triggers.forEach((t) => t.kill());
+      };
+    },
+    { scope: containerRef, dependencies: [childCount(children), reducedMotion] },
+  );
+
+  return (
+    <main
+      ref={containerRef}
+      aria-label={ariaLabel}
+      className={cx('w-full overflow-x-hidden', className)}
+    >
+      {children}
+    </main>
+  );
+};
+
+export default FlowArt;
+
+
+demo.tsx
+import FlowArt, { FlowSection } from '../components/ui/story-scroll.tsx';
+
+export default function FlowArtDefaultDemo() {
+  return (
+    <FlowArt aria-label="Présentation Flow Art">
+      <FlowSection aria-label="Qui nous sommes" style={{ backgroundColor: '#fd5200', color: '#fff' }}>
+        <p className="text-xs font-bold uppercase tracking-[0.2em]">01 — Who we are</p>
+        <hr className="my-[2vw] border-none border-t border-black opacity-100" />
+        <div>
+          <h1
+            className="text-[clamp(3.5rem,12vw,14rem)] font-bold leading-[0.85] uppercase tracking-tight"
+          >
+            Create
+            <br />
+            Without
+            <br />
+            Limits
+          </h1>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-black opacity-100" />
+        <p className="mt-auto max-w-[50ch] text-[clamp(1rem,2.5vw,2rem)] font-normal leading-relaxed">
+          We believe every artist deserves a platform that puts creativity first. No algorithms, no
+          noise — just pure art and the people who make it.
+        </p>
+      </FlowSection>
+
+      <FlowSection aria-label="La mission" style={{ backgroundColor: '#000', color: '#fff' }}>
+        <p className="text-xs font-bold uppercase tracking-[0.2em]">02 — The mission</p>
+        <hr className="my-[2vw] border-none border-t border-white/60" />
+        <div>
+          <h2
+            className="text-[clamp(3.5rem,12vw,14rem)] font-bold leading-[0.85] uppercase tracking-tight"
+          >
+            Art
+            <br />
+            First
+            <br />
+            Always
+          </h2>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-white/60" />
+        <p className="max-w-[50ch] text-[clamp(1rem,2.5vw,2rem)] font-normal leading-relaxed">
+          A global community built for artists, by artists. We&apos;re rewriting the rules of how
+          creative work gets seen, shared, and valued.
+        </p>
+        <hr className="my-[2vw] border-none border-t border-white/60" />
+        <div className="flex flex-wrap gap-[3vw]">
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Discovery</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Human-curated collections that put real eyes on real art. No algorithms deciding your
+              fate.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Community</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Find collaborators, mentors, and fellow creatives who push your work forward.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Value</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Fair pricing. Transparent commissions. Artists keep what they earn. Always.
+            </p>
+          </div>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-white/60" />
+        <div className="flex flex-wrap gap-[3vw]">
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Exhibitions</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Virtual and physical showcases curated from our global network.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Mentorship</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Paired guidance from established artists who&apos;ve walked the path.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Residencies</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Access funded creative retreats around the world.
+            </p>
+          </div>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-white/60" />
+        <p className="mt-auto ml-auto max-w-[50ch] text-right text-[clamp(1rem,2.5vw,2rem)] font-normal leading-relaxed">
+          Every feature we build starts with one question — does this serve the artist?
+        </p>
+      </FlowSection>
+
+      <FlowSection aria-label="Comment ça marche" style={{ backgroundColor: '#F5F0E8', color: '#000' }}>
+        <p className="text-xs font-bold uppercase tracking-[0.2em]">03 — How it works</p>
+        <hr className="my-[2vw] border-none border-t border-black/60" />
+        <div>
+          <h2
+            className="text-[clamp(3.5rem,12vw,14rem)] font-bold leading-[0.85] uppercase tracking-tight"
+          >
+            Show
+            <br />
+            Up.
+            <br />
+            Stand
+            <br />
+            Out.
+          </h2>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-black/60" />
+        <p className="max-w-[50ch] text-[clamp(1rem,2.5vw,2rem)] font-normal leading-relaxed">
+          Three steps. Zero complexity. Your creative career starts moving the moment you sign up.
+        </p>
+        <hr className="my-[2vw] border-none border-t border-black/60" />
+        <div className="flex flex-wrap gap-[3vw]">
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">01 — Upload</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Drag, drop, done. Your portfolio goes live in seconds with full creative control.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">02 — Connect</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Match with collectors, galleries, and brands actively looking for your style.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">03 — Grow</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Track engagement, manage commissions, and scale your practice — all in one place.
+            </p>
+          </div>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-black/60" />
+        <div className="flex flex-wrap gap-[3vw]">
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">04 — Sell</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Set your prices, manage editions, handle licensing. Built-in commerce tools.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">05 — Collaborate</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Find your people. Joint projects, split commissions, shared studios.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">06 — Evolve</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Your practice changes. Your platform should too. Flexible tools that adapt.
+            </p>
+          </div>
+        </div>
+      </FlowSection>
+
+      <FlowSection aria-label="La vision" style={{ backgroundColor: '#1A3DE8', color: '#fff' }}>
+        <p className="text-xs font-bold uppercase tracking-[0.2em]">04 — The vision</p>
+        <hr className="my-[2vw] border-none border-t border-white/50" />
+        <div>
+          <h2
+            className="text-[clamp(3.5rem,12vw,14rem)] font-bold leading-[0.85] uppercase tracking-tight"
+          >
+            Future
+            <br />
+            Of
+            <br />
+            Art
+          </h2>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-white/50" />
+        <p className="max-w-[50ch] text-[clamp(1rem,2.5vw,2rem)] font-normal leading-relaxed">
+          We&apos;re not just building a platform. We&apos;re building a movement.
+        </p>
+        <hr className="my-[2vw] border-none border-t border-white/50" />
+        <div className="flex flex-wrap gap-[3vw]">
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">10K+</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Artists from 80 countries already shaping the future with us.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">$2M+</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Paid directly to creators in our first year. Zero hidden fees.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">100%</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Artist-owned. Every decision we make starts with the creator.
+            </p>
+          </div>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-white/50" />
+        <p className="max-w-[50ch] text-[clamp(1rem,2.5vw,2rem)] font-normal leading-relaxed">
+          The art world has been broken for decades. Galleries take 50%. Algorithms bury talent.
+          We&apos;re here to change that — permanently.
+        </p>
+        <hr className="my-[2vw] border-none border-t border-white/50" />
+        <div className="flex flex-wrap gap-[3vw]">
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Open access</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              No invite codes. No waiting lists. If you make art, you belong here.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Global reach</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              Your work seen in 120+ countries from day one.
+            </p>
+          </div>
+          <div className="min-w-[180px] flex-1">
+            <p className="mb-2 text-sm font-bold uppercase tracking-wider">Artist-first economics</p>
+            <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] leading-relaxed opacity-75">
+              You keep 90% of every sale. The remaining 10% funds the platform and the mission.
+            </p>
+          </div>
+        </div>
+      </FlowSection>
+
+      <FlowSection aria-label="Nous rejoindre" style={{ backgroundColor: '#000', color: '#fff' }}>
+        <p className="text-xs font-bold uppercase tracking-[0.2em]">05 — Join us</p>
+        <hr className="my-[2vw] border-none border-t border-black/60" />
+        <div>
+          <h2
+            className="text-[clamp(3.5rem,12vw,14rem)] font-bold leading-[0.85] uppercase tracking-tight"
+          >
+            Ready
+            <br />
+            To
+            <br />
+            Begin?
+          </h2>
+        </div>
+        <hr className="my-[2vw] border-none border-t border-black/60" />
+        <p className="mt-auto max-w-[50ch] text-[clamp(1rem,2.5vw,2rem)] font-normal leading-relaxed">
+          Take control of your creative journey. Join now and let&apos;s shape the future of the art
+          world together.
+        </p>
+      </FlowSection>
+    </FlowArt>
+  );
+}
+
+```
+
+Install NPM dependencies:
+```bash
+gsap, @gsap/react
+```
+
+Extend existing Tailwind 4 index.css with this code (or if project uses Tailwind 3, extend tailwind.config.js or globals.css):
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+
+
+hero section backgorund and video type thing from this
+Build a full-screen hero section for a data-security SaaS landing page called "securify" using React + TypeScript + Tailwind CSS, with a looping fullscreen background video, a floating pill-shaped navbar, and large staggered typography.
+
+Fonts & Global Styles
+
+Load Google font "Readex Pro" weights 300, 400, 500, 600, 700.
+Set body font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;, background #000, color #fff, antialiased.
+Make html, body, #root height 100%.
+Add a .hero-title class with letter-spacing: -0.04em; line-height: 0.95;.
+Section container
+
+A <section> with classes: relative h-screen w-full overflow-hidden bg-black.
+Background video
+
+<video> with className="absolute inset-0 w-full h-full object-cover", autoPlay loop muted playsInline, and src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_063509_7d167302-4fd4-480b-8260-18ab572333d4.mp4".
+Navbar (absolute, z-20, px-6 md:px-10 pt-6, top-0 left-0 right-0)
+
+A <nav> with flex items-center justify-between gap-4.
+Left pill: flex items-center gap-2 bg-neutral-900/90 backdrop-blur rounded-full pl-4 pr-6 py-3 containing:
+A custom white SVG logo (viewBox 0 0 256 256, class h-5 w-5) with path: M 128 192 L 128 256 L 64.5 256 L 32 223 L 0 192 L 0 128 L 64 128 Z M 256 192 L 256 256 L 192.5 256 L 160 223 L 128 192 L 128 128 L 192 128 Z M 128 64 L 128 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 Z M 256 64 L 256 128 L 192.5 128 L 160 95 L 128 64 L 128 0 L 192 0 Z filled #ffffff.
+Brand text "securify" (text-white text-sm font-normal tracking-tight).
+Center pill (hidden on mobile): hidden md:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2 with four anchor links: "platform", "solutions", "company", "support" — each text-neutral-300 hover:text-white transition-colors text-sm px-5 py-2 rounded-full.
+Right button: "get started" — bg-white text-black text-sm font-normal rounded-full px-6 py-3 hover:bg-neutral-200 transition-colors.
+Foreground content wrapper: relative h-full w-full (rendered after Navbar, above the video).
+
+Three giant staggered headline words (each an <h1> with class hero-title absolute text-white font-medium text-[14vw] md:text-[13vw]):
+
+"protect" — left-4 md:left-10 top-[18%]
+"your" — right-4 md:right-10 top-[38%]
+"data" — left-[18%] md:left-[28%] top-[58%]
+All lowercase.
+
+Description paragraph (absolute, left-6 md:left-10 top-[46%], max-w-[240px] text-[15px] leading-snug text-white/90):
+
+"we can guarding your data with utmost care, empowering you with privacy everywhere"
+
+Stat block — top-right (absolute right-6 md:right-24 top-[14%]):
+
+Row: flex items-center gap-3 justify-end — a diagonal divider (hidden md:block h-px w-24 bg-white/40 rotate-[20deg]) then number "+65k" (text-4xl md:text-5xl font-medium tracking-tight).
+Sublabel: "startups use" (text-xs md:text-sm text-white/70 mt-1 text-right).
+Bottom gradient overlay: pointer-events-none absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-black.
+
+Stat block — bottom-left (absolute left-6 md:left-20 bottom-20 md:bottom-24):
+
+Row: number "+1.5b" then divider hidden md:block h-px w-24 bg-white/40 rotate-[-20deg].
+Sublabel: "gb data was protected" (text-xs md:text-sm text-white/70 mt-1).
+Stat block — bottom-right (absolute right-6 md:right-20 bottom-16 md:bottom-20):
+
+Row: diagonal divider rotate-[-20deg] then "+300k".
+Sublabel: "downloads" (right-aligned, text-white/70).
+Notes
+
+All text is lowercase.
+Navbar pills use bg-neutral-900/90 backdrop-blur.
+Only transitions: hover:text-white on nav links, hover:bg-neutral-200 on the button.
+No purple/indigo anywhere; palette is pure black, white, neutral-900, and white opacity variants (white/40, white/70, white/90).
+Responsive: mobile hides nav links and diagonal dividers; typography scales via vw units.
+
+I would deploy this to vercel and want a local db of nextjs that stays alive even after refresh basically I want a place where my trusted devs can add a comment but before doing that I share a pass named TrustedDev01 then only they can share the review and it's stays in nextjs add a library that exists for this I don't need any db for this
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+testimonials-columns-1.tsx
+"use client";
+import React from "react";
+import { motion } from "motion/react";
+
+
+export const TestimonialsColumn = (props: {
+  className?: string;
+  testimonials: typeof testimonials;
+  duration?: number;
+}) => {
+  return (
+    <div className={props.className}>
+      <motion.div
+        animate={{
+          translateY: "-50%",
+        }}
+        transition={{
+          duration: props.duration || 10,
+          repeat: Infinity,
+          ease: "linear",
+          repeatType: "loop",
+        }}
+        className="flex flex-col gap-6 pb-6 bg-background"
+      >
+        {[
+          ...new Array(2).fill(0).map((_, index) => (
+            <React.Fragment key={index}>
+              {props.testimonials.map(({ text, image, name, role }, i) => (
+                <div className="p-10 rounded-3xl border shadow-lg shadow-primary/10 max-w-xs w-full" key={i}>
+                  <div>{text}</div>
+                  <div className="flex items-center gap-2 mt-5">
+                    <img
+                      width={40}
+                      height={40}
+                      src={image}
+                      alt={name}
+                      className="h-10 w-10 rounded-full"
+                    />
+                    <div className="flex flex-col">
+                      <div className="font-medium tracking-tight leading-5">{name}</div>
+                      <div className="leading-5 opacity-60 tracking-tight">{role}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </React.Fragment>
+          )),
+        ]}
+      </motion.div>
+    </div>
+  );
+};
+
+;
+
+demo.tsx
+import { TestimonialsColumn } from "@/components/ui/testimonials-columns-1";
+import { motion } from "motion/react";
+
+const testimonials = [
+  {
+    text: "This ERP revolutionized our operations, streamlining finance and inventory. The cloud-based platform keeps us productive, even remotely.",
+    image: "https://randomuser.me/api/portraits/women/1.jpg",
+    name: "Briana Patton",
+    role: "Operations Manager",
+  },
+  {
+    text: "Implementing this ERP was smooth and quick. The customizable, user-friendly interface made team training effortless.",
+    image: "https://randomuser.me/api/portraits/men/2.jpg",
+    name: "Bilal Ahmed",
+    role: "IT Manager",
+  },
+  {
+    text: "The support team is exceptional, guiding us through setup and providing ongoing assistance, ensuring our satisfaction.",
+    image: "https://randomuser.me/api/portraits/women/3.jpg",
+    name: "Saman Malik",
+    role: "Customer Support Lead",
+  },
+  {
+    text: "This ERP's seamless integration enhanced our business operations and efficiency. Highly recommend for its intuitive interface.",
+    image: "https://randomuser.me/api/portraits/men/4.jpg",
+    name: "Omar Raza",
+    role: "CEO",
+  },
+  {
+    text: "Its robust features and quick support have transformed our workflow, making us significantly more efficient.",
+    image: "https://randomuser.me/api/portraits/women/5.jpg",
+    name: "Zainab Hussain",
+    role: "Project Manager",
+  },
+  {
+    text: "The smooth implementation exceeded expectations. It streamlined processes, improving overall business performance.",
+    image: "https://randomuser.me/api/portraits/women/6.jpg",
+    name: "Aliza Khan",
+    role: "Business Analyst",
+  },
+  {
+    text: "Our business functions improved with a user-friendly design and positive customer feedback.",
+    image: "https://randomuser.me/api/portraits/men/7.jpg",
+    name: "Farhan Siddiqui",
+    role: "Marketing Director",
+  },
+  {
+    text: "They delivered a solution that exceeded expectations, understanding our needs and enhancing our operations.",
+    image: "https://randomuser.me/api/portraits/women/8.jpg",
+    name: "Sana Sheikh",
+    role: "Sales Manager",
+  },
+  {
+    text: "Using this ERP, our online presence and conversions significantly improved, boosting business performance.",
+    image: "https://randomuser.me/api/portraits/men/9.jpg",
+    name: "Hassan Ali",
+    role: "E-commerce Manager",
+  },
+];
+
+
+const firstColumn = testimonials.slice(0, 3);
+const secondColumn = testimonials.slice(3, 6);
+const thirdColumn = testimonials.slice(6, 9);
+
+
+const Testimonials = () => {
+  return (
+    <section className="bg-background my-20 relative">
+
+      <div className="container z-10 mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
+        >
+          <div className="flex justify-center">
+            <div className="border py-1 px-4 rounded-lg">Testimonials</div>
+          </div>
+
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5">
+            What our users say
+          </h2>
+          <p className="text-center mt-5 opacity-75">
+            See what our customers have to say about us.
+          </p>
+        </motion.div>
+
+        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+          <TestimonialsColumn testimonials={firstColumn} duration={15} />
+          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
+          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default { Testimonials };
+```
+
+Install NPM dependencies:
+```bash
+motion
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+
+social links dock: You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+animated-dock.tsx
+"use client" 
+
+import * as React from "react"
+import { useRef } from "react";
+import {
+  MotionValue,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "motion/react";
+ 
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+
+import Link from "next/link";
+ 
+const cn = (...args: any[]) => twMerge(clsx(args));
+ 
+export interface AnimatedDockProps {
+  className?: string;
+  items: DockItemData[];
+}
+ 
+export interface DockItemData {
+  link: string;
+  Icon: React.ReactNode;
+  target?: string;
+}
+ 
+export const AnimatedDock = ({ className, items }: AnimatedDockProps) => {
+  const mouseX = useMotionValue(Infinity);
+ 
+  return (
+    <motion.div
+      onMouseMove={(e) => mouseX.set(e.pageX)}
+      onMouseLeave={() => mouseX.set(Infinity)}
+      className={cn(
+        "mx-auto flex h-16 items-end gap-4 rounded-2xl bg-secondary/50 border border-primary/10 shadow-md px-4 pb-3",
+        className,
+      )}
+    >
+      {items.map((item, index) => (
+        <DockItem key={index} mouseX={mouseX}>
+          <Link
+            href={item.link}
+            target={item.target}
+            className="grow flex items-center justify-center w-full h-full text-primary-foreground"
+          >
+            {item.Icon}
+          </Link>
+        </DockItem>
+      ))}
+    </motion.div>
+  );
+};
+ 
+interface DockItemProps {
+  mouseX: MotionValue<number>;
+  children: React.ReactNode;
+}
+ 
+export const DockItem = ({ mouseX, children }: DockItemProps) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const distance = useTransform(mouseX, (val) => {
+    const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
+    return val - bounds.x - bounds.width / 2;
+  });
+
+  const widthSync = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  const width = useSpring(widthSync, {
+    mass: 0.1,
+    stiffness: 150,
+    damping: 12,
+  });
+
+  const iconScale = useTransform(width, [40, 80], [1, 1.5]);
+  const iconSpring = useSpring(iconScale, {
+    mass: 0.1,
+    stiffness: 150,
+    damping: 12,
+  });
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{ width }}
+      className="aspect-square w-10 rounded-full bg-primary text-secondary-foreground flex items-center justify-center"
+    >
+      <motion.div
+        style={{ scale: iconSpring }}
+        className="flex items-center justify-center w-full h-full grow"
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+};
+
+
+demo.tsx
+import { Github, Twitter, Youtube, Flower } from 'lucide-react'
+import { AnimatedDock } from "@/components/ui/animated-dock"
+
+const Demo = () => {
+    return (
+        <>
+            <AnimatedDock
+                items={[
+                    {
+                        link: "https://github.com/preetsuthar17",
+                        target: "_blank",
+                        Icon: <Github size={22} />,
+                    },
+                    {
+                        link: "https://x.com/preetsuthar17",
+                        target: "_blank",
+                        Icon: <Twitter size={22} />,
+                    },
+                    {
+                        link: "https://www.youtube.com/@preetsuthar17",
+                        target: "_blank",
+                        Icon: <Youtube size={22} />,
+                    },
+                    {
+                        link: "https://github.com/preetsuthar17/hextaui",
+                        target: "_blank",
+                        Icon: <Flower size={22} />,
+                    },
+                ]}
+            />
+        </>
+    )
+}
+
+export {Demo}
+```
+
+Install NPM dependencies:
+```bash
+clsx, motion, tailwind-merge
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+this as site loader:
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+anomalous-matter-hero.tsx
+import React, { useRef, useEffect, Suspense } from "react";
+import * as THREE from "three";
+
+export function GenerativeArtScene() {
+  const mountRef = useRef(null);
+  const lightRef = useRef(null);
+
+  useEffect(() => {
+    const currentMount = mountRef.current;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      currentMount.clientWidth / currentMount.clientHeight,
+      0.1,
+      1000
+    );
+    camera.position.z = 3;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    currentMount.appendChild(renderer.domElement);
+
+    const geometry = new THREE.IcosahedronGeometry(1.2, 64);
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 },
+        pointLightPos: { value: new THREE.Vector3(0, 0, 5) },
+        color: { value: new THREE.Color("hsl(var(--sky-300))") },
+      },
+      vertexShader: `                uniform float time;
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                
+                // Perlin Noise function
+                vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+                vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+                float snoise(vec3 v) {
+                    const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+                    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+                    vec3 i = floor(v + dot(v, C.yyy));
+                    vec3 x0 = v - i + dot(i, C.xxx);
+                    vec3 g = step(x0.yzx, x0.xyz);
+                    vec3 l = 1.0 - g;
+                    vec3 i1 = min(g.xyz, l.zxy);
+                    vec3 i2 = max(g.xyz, l.zxy);
+                    vec3 x1 = x0 - i1 + C.xxx;
+                    vec3 x2 = x0 - i2 + C.yyy;
+                    vec3 x3 = x0 - D.yyy;
+                    i = mod289(i);
+                    vec4 p = permute(permute(permute(
+                                i.z + vec4(0.0, i1.z, i2.z, 1.0))
+                            + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+                            + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+                    float n_ = 0.142857142857;
+                    vec3 ns = n_ * D.wyz - D.xzx;
+                    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                    vec4 x_ = floor(j * ns.z);
+                    vec4 y_ = floor(j - 7.0 * x_);
+                    vec4 x = x_ * ns.x + ns.yyyy;
+                    vec4 y = y_ * ns.x + ns.yyyy;
+                    vec4 h = 1.0 - abs(x) - abs(y);
+                    vec4 b0 = vec4(x.xy, y.xy);
+                    vec4 b1 = vec4(x.zw, y.zw);
+                    vec4 s0 = floor(b0) * 2.0 + 1.0;
+                    vec4 s1 = floor(b1) * 2.0 + 1.0;
+                    vec4 sh = -step(h, vec4(0.0));
+                    vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+                    vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+                    vec3 p0 = vec3(a0.xy, h.x);
+                    vec3 p1 = vec3(a0.zw, h.y);
+                    vec3 p2 = vec3(a1.xy, h.z);
+                    vec3 p3 = vec3(a1.zw, h.w);
+                    vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+                    p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+                    vec4 m = max(0.6 - vec4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
+                    m = m * m;
+                    return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
+                }
+
+                void main() {
+                    vNormal = normal;
+                    vPosition = position;
+                    float displacement = snoise(position * 2.0 + time * 0.5) * 0.2;
+                    vec3 newPosition = position + normal * displacement;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                }`,    // (same GLSL code as before)
+      fragmentShader: `                uniform vec3 color;
+                uniform vec3 pointLightPosition;
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                
+                void main() {
+                    vec3 normal = normalize(vNormal);
+                    vec3 lightDir = normalize(pointLightPosition - vPosition);
+                    float diffuse = max(dot(normal, lightDir), 0.0);
+                    
+                    // Fresnel effect for the glow
+                    float fresnel = 1.0 - dot(normal, vec3(0.0, 0.0, 1.0));
+                    fresnel = pow(fresnel, 2.0);
+                    
+                    vec3 finalColor = color * diffuse + color * fresnel * 0.5;
+                    
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }`,  // (same GLSL code as before)
+      wireframe: true,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+    pointLight.position.set(0, 0, 5);
+    lightRef.current = pointLight;
+    scene.add(pointLight);
+
+    let frameId;
+    const animate = (t) => {
+      material.uniforms.time.value = t * 0.0003;
+      mesh.rotation.y += 0.0005;
+      mesh.rotation.x += 0.0002;
+      renderer.render(scene, camera);
+      frameId = requestAnimationFrame(animate);
+    };
+    animate(0);
+
+    const handleResize = () => {
+      camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+    };
+
+    const handleMouseMove = (e) => {
+      const x = (e.clientX / window.innerWidth) * 2 - 1;
+      const y = -(e.clientY / window.innerHeight) * 2 + 1;
+      const vec = new THREE.Vector3(x, y, 0.5).unproject(camera);
+      const dir = vec.sub(camera.position).normalize();
+      const dist = -camera.position.z / dir.z;
+      const pos = camera.position.clone().add(dir.multiplyScalar(dist));
+      lightRef.current.position.copy(pos);
+      material.uniforms.pointLightPos.value = pos;
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      currentMount.removeChild(renderer.domElement);
+    };
+  }, []);
+
+  return <div ref={mountRef} className="absolute inset-0 w-full h-full z-0" />;
+}
+
+export function AnomalousMatterHero({
+  title = "Observation Log: Anomaly 7",
+  subtitle = "Matter in a state of constant, beautiful flux.",
+  description = "A new form of digital existence has been observed. It responds to stimuli, changes form, and exudes an unknown energy. Further study is required.",
+}) {
+  return (
+    <section
+      role="banner"
+      className="relative w-full h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] overflow-hidden"
+    >
+      <Suspense fallback={<div className="w-full h-full bg-[hsl(var(--background))]" />}>
+        <GenerativeArtScene />
+      </Suspense>
+
+      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(var(--background))] via-[hsl(var(--background))/70] to-transparent z-10" />
+
+      <div className="relative z-20 flex flex-col items-center justify-end h-full pb-20 md:pb-32 text-center">
+        <div className="max-w-3xl px-4 animate-fade-in-long">
+          <h1 className="text-sm font-mono tracking-widest text-[hsl(var(--sky-300)/80)] uppercase">
+            {title}
+          </h1>
+          <p className="mt-4 text-3xl md:text-5xl font-bold leading-tight">
+            {subtitle}
+          </p>
+          <p className="mt-6 max-w-xl mx-auto text-base leading-relaxed text-[hsl(var(--gray-300)/80)]">
+            {description}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+demo.tsx
+import React from "react";
+import { AnomalousMatterHero } from "@/components/ui/anomalous-matter-hero";
+
+function App() {
+  return (
+    <AnomalousMatterHero
+      title="Launch Sequence: Anomaly 12"
+      subtitle="Energy dances along unseen frontiers."
+      description="This demo shows how to override the default copy and integrate hero into a page layout."
+    />
+  );
+}
+
+export default App;
+```
+
+Install NPM dependencies:
+```bash
+three
+```
+
+Extend existing Tailwind 4 index.css with this code (or if project uses Tailwind 3, extend tailwind.config.js or globals.css):
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --background: 0, 0%, 0%;
+  --foreground: 0, 100%, 100%;
+  --sky-300: 203, 92%, 53%;
+  --gray-300: 0, 0%, 70%;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+
+still giving my projects so u can add skills and techstack based on the role and all as 
+ai enginerrr dev and vybersec, security engineer etc: 
+with actual symbols of the techstack in this ui based
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+button.tsx
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow-sm shadow-black/5 hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-sm shadow-black/5 hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background shadow-sm shadow-black/5 hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-sm shadow-black/5 hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-lg px-3 text-xs",
+        lg: "h-10 rounded-lg px-8",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+    );
+  },
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
+
+
+demo.tsx
+import { Button } from "@/components/ui/button";
+import { RiFacebookFill, RiGithubFill, RiGoogleFill, RiTwitterXFill } from "@remixicon/react";
+
+function Component() {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Button className="flex-1" variant="outline" aria-label="Login with Google" size="icon">
+        <RiGoogleFill className="text-[#DB4437] dark:text-primary" size={16} aria-hidden="true" />
+      </Button>
+      <Button className="flex-1" variant="outline" aria-label="Login with Facebook" size="icon">
+        <RiFacebookFill className="text-[#1877f2] dark:text-primary" size={16} aria-hidden="true" />
+      </Button>
+      <Button className="flex-1" variant="outline" aria-label="Login with X" size="icon">
+        <RiTwitterXFill className="text-[#14171a] dark:text-primary" size={16} aria-hidden="true" />
+      </Button>
+      <Button className="flex-1" variant="outline" aria-label="Login with GitHub" size="icon">
+        <RiGithubFill className="text-black dark:text-primary" size={16} aria-hidden="true" />
+      </Button>
+    </div>
+  );
+}
+
+export { Component };
+
+```
+
+Install NPM dependencies:
+```bash
+@radix-ui/react-slot, class-variance-authority
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+
+Then I need a contact page use nodemailer the email and pass is in env.local
+place india  Gujarat  Ahmedabad  
+Mobile number +91 9824998490
+scroll to top button whatsaap chat button and 
+also add projects porperly I'll give u the screenshots of the project so keep the space for it and I'll put the ss in public
+
+contact form:
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+contact-card.tsx
+import React from 'react';
+import { cn } from '@/lib/utils';
+import {
+	LucideIcon,
+	PlusIcon,
+} from 'lucide-react';
+
+type ContactInfoProps = React.ComponentProps<'div'> & {
+	icon: LucideIcon;
+	label: string;
+	value: string;
+};
+
+type ContactCardProps = React.ComponentProps<'div'> & {
+	// Content props
+	title?: string;
+	description?: string;
+	contactInfo?: ContactInfoProps[];
+	formSectionClassName?: string;
+};
+
+export function ContactCard({
+	title = 'Contact With Us',
+	description = 'If you have any questions regarding our Services or need help, please fill out the form here. We do our best to respond within 1 business day.',
+	contactInfo,
+	className,
+	formSectionClassName,
+	children,
+	...props
+}: ContactCardProps) {
+	return (
+		<div
+			className={cn(
+				'bg-card border relative grid h-full w-full shadow md:grid-cols-2 lg:grid-cols-3',
+				className,
+			)}
+			{...props}
+		>
+			<PlusIcon className="absolute -top-3 -left-3 h-6 w-6" />
+			<PlusIcon className="absolute -top-3 -right-3 h-6 w-6" />
+			<PlusIcon className="absolute -bottom-3 -left-3 h-6 w-6" />
+			<PlusIcon className="absolute -right-3 -bottom-3 h-6 w-6" />
+			<div className="flex flex-col justify-between lg:col-span-2">
+				<div className="relative h-full space-y-4 px-4 py-8 md:p-8">
+					<h1 className="text-3xl font-bold md:text-4xl lg:text-5xl">
+						{title}
+					</h1>
+					<p className="text-muted-foreground max-w-xl text-sm md:text-base lg:text-lg">
+						{description}
+					</p>
+					<div className="grid gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
+						{contactInfo?.map((info, index) => (
+							<ContactInfo key={index} {...info} />
+						))}
+					</div>
+				</div>
+			</div>
+			<div
+				className={cn(
+					'bg-muted/40 flex h-full w-full items-center border-t p-5 md:col-span-1 md:border-t-0 md:border-l',
+					formSectionClassName,
+				)}
+			>
+				{children}
+			</div>
+		</div>
+	);
+}
+
+function ContactInfo({
+	icon: Icon,
+	label,
+	value,
+	className,
+	...props
+}: ContactInfoProps) {
+	return (
+		<div className={cn('flex items-center gap-3 py-3', className)} {...props}>
+			<div className="bg-muted/40 rounded-lg p-3">
+				<Icon className="h-5 w-5" />
+			</div>
+			<div>
+				<p className="font-medium">{label}</p>
+				<p className="text-muted-foreground text-xs">{value}</p>
+			</div>
+		</div>
+	);
+}
+
+
+demo.tsx
+import { ContactCard } from "@/components/ui/contact-card";
+import { MailIcon, PhoneIcon, MapPinIcon } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+
+export default function DefaultDemo() {
+	return (
+		<main className="relative flex size-full min-h-screen w-full items-center justify-center p-4">
+			<div className="mx-auto max-w-5xl">
+				<ContactCard
+					title="Get in touch"
+					description="If you have any questions regarding our Services or need help, please fill out the form here. We do our best to respond within 1 business day."
+					contactInfo={[
+						{
+							icon: MailIcon,
+							label: 'Email',
+							value: 'contact@21st.dev',
+						},
+						{
+							icon: PhoneIcon,
+							label: 'Phone',
+							value: '+92 312 1234567',
+						},
+						{
+							icon: MapPinIcon,
+							label: 'Address',
+							value: 'Faisalabad, Pakistan',
+							className: 'col-span-2',
+						}
+					]}
+				>
+					<form action="" className="w-full space-y-4">
+						<div className="flex flex-col gap-2">
+							<Label>Name</Label>
+							<Input type="text" />
+						</div>
+						<div className="flex flex-col gap-2">
+							<Label>Email</Label>
+							<Input type="email" />
+						</div>
+						<div className="flex flex-col gap-2">
+							<Label>Phone</Label>
+							<Input type="phone" />
+						</div>
+						<div className="flex flex-col gap-2">
+							<Label>Message</Label>
+							<Textarea  />
+						</div>
+						<Button className="w-full" type="button">
+							Submit
+						</Button>
+					</form>
+				</ContactCard>
+			</div>
+		</main>
+	);
+}
+```
+
+Copy-paste these files for dependencies:
+```tsx
+shadcn/button
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  },
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
+
+```
+```tsx
+shadcn/input
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
+
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Input.displayName = "Input"
+
+export { Input }
+
+```
+```tsx
+shadcn/label
+"use client"
+
+import * as React from "react"
+import * as LabelPrimitive from "@radix-ui/react-label"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+
+const labelVariants = cva(
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+)
+
+const Label = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
+    VariantProps<typeof labelVariants>
+>(({ className, ...props }, ref) => (
+  <LabelPrimitive.Root
+    ref={ref}
+    className={cn(labelVariants(), className)}
+    {...props}
+  />
+))
+Label.displayName = LabelPrimitive.Root.displayName
+
+export { Label }
+
+```
+```tsx
+shadcn/textarea
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
+
+export interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <textarea
+        className={cn(
+          "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Textarea.displayName = "Textarea"
+
+export { Textarea }
+
+```
+
+Install NPM dependencies:
+```bash
+lucide-react, @radix-ui/react-slot, class-variance-authority, @radix-ui/react-label
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+
+leave a review box:
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+animated-ai-chat.tsx
+"use client";
+
+import { useEffect, useRef, useCallback, useTransition } from "react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import {
+    ImageIcon,
+    FileUp,
+    Figma,
+    MonitorIcon,
+    CircleUserRound,
+    ArrowUpIcon,
+    Paperclip,
+    PlusIcon,
+    SendIcon,
+    XIcon,
+    LoaderIcon,
+    Sparkles,
+    Command,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import * as React from "react"
+
+interface UseAutoResizeTextareaProps {
+    minHeight: number;
+    maxHeight?: number;
+}
+
+function useAutoResizeTextarea({
+    minHeight,
+    maxHeight,
+}: UseAutoResizeTextareaProps) {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const adjustHeight = useCallback(
+        (reset?: boolean) => {
+            const textarea = textareaRef.current;
+            if (!textarea) return;
+
+            if (reset) {
+                textarea.style.height = `${minHeight}px`;
+                return;
+            }
+
+            textarea.style.height = `${minHeight}px`;
+            const newHeight = Math.max(
+                minHeight,
+                Math.min(
+                    textarea.scrollHeight,
+                    maxHeight ?? Number.POSITIVE_INFINITY
+                )
+            );
+
+            textarea.style.height = `${newHeight}px`;
+        },
+        [minHeight, maxHeight]
+    );
+
+    useEffect(() => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = `${minHeight}px`;
+        }
+    }, [minHeight]);
+
+    useEffect(() => {
+        const handleResize = () => adjustHeight();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [adjustHeight]);
+
+    return { textareaRef, adjustHeight };
+}
+
+interface CommandSuggestion {
+    icon: React.ReactNode;
+    label: string;
+    description: string;
+    prefix: string;
+}
+
+interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  containerClassName?: string;
+  showRing?: boolean;
+}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, containerClassName, showRing = true, ...props }, ref) => {
+    const [isFocused, setIsFocused] = React.useState(false);
+    
+    return (
+      <div className={cn(
+        "relative",
+        containerClassName
+      )}>
+        <textarea
+          className={cn(
+            "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm",
+            "transition-all duration-200 ease-in-out",
+            "placeholder:text-muted-foreground",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            showRing ? "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0" : "",
+            className
+          )}
+          ref={ref}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          {...props}
+        />
+        
+        {showRing && isFocused && (
+          <motion.span 
+            className="absolute inset-0 rounded-md pointer-events-none ring-2 ring-offset-0 ring-violet-500/30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
+
+        {props.onChange && (
+          <div 
+            className="absolute bottom-2 right-2 opacity-0 w-2 h-2 bg-violet-500 rounded-full"
+            style={{
+              animation: 'none',
+            }}
+            id="textarea-ripple"
+          />
+        )}
+      </div>
+    )
+  }
+)
+Textarea.displayName = "Textarea"
+
+export function AnimatedAIChat() {
+    const [value, setValue] = useState("");
+    const [attachments, setAttachments] = useState<string[]>([]);
+    const [isTyping, setIsTyping] = useState(false);
+    const [isPending, startTransition] = useTransition();
+    const [activeSuggestion, setActiveSuggestion] = useState<number>(-1);
+    const [showCommandPalette, setShowCommandPalette] = useState(false);
+    const [recentCommand, setRecentCommand] = useState<string | null>(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const { textareaRef, adjustHeight } = useAutoResizeTextarea({
+        minHeight: 60,
+        maxHeight: 200,
+    });
+    const [inputFocused, setInputFocused] = useState(false);
+    const commandPaletteRef = useRef<HTMLDivElement>(null);
+
+    const commandSuggestions: CommandSuggestion[] = [
+        { 
+            icon: <ImageIcon className="w-4 h-4" />, 
+            label: "Clone UI", 
+            description: "Generate a UI from a screenshot", 
+            prefix: "/clone" 
+        },
+        { 
+            icon: <Figma className="w-4 h-4" />, 
+            label: "Import Figma", 
+            description: "Import a design from Figma", 
+            prefix: "/figma" 
+        },
+        { 
+            icon: <MonitorIcon className="w-4 h-4" />, 
+            label: "Create Page", 
+            description: "Generate a new web page", 
+            prefix: "/page" 
+        },
+        { 
+            icon: <Sparkles className="w-4 h-4" />, 
+            label: "Improve", 
+            description: "Improve existing UI design", 
+            prefix: "/improve" 
+        },
+    ];
+
+    useEffect(() => {
+        if (value.startsWith('/') && !value.includes(' ')) {
+            setShowCommandPalette(true);
+            
+            const matchingSuggestionIndex = commandSuggestions.findIndex(
+                (cmd) => cmd.prefix.startsWith(value)
+            );
+            
+            if (matchingSuggestionIndex >= 0) {
+                setActiveSuggestion(matchingSuggestionIndex);
+            } else {
+                setActiveSuggestion(-1);
+            }
+        } else {
+            setShowCommandPalette(false);
+        }
+    }, [value]);
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            setMousePosition({ x: e.clientX, y: e.clientY });
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Node;
+            const commandButton = document.querySelector('[data-command-button]');
+            
+            if (commandPaletteRef.current && 
+                !commandPaletteRef.current.contains(target) && 
+                !commandButton?.contains(target)) {
+                setShowCommandPalette(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (showCommandPalette) {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActiveSuggestion(prev => 
+                    prev < commandSuggestions.length - 1 ? prev + 1 : 0
+                );
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActiveSuggestion(prev => 
+                    prev > 0 ? prev - 1 : commandSuggestions.length - 1
+                );
+            } else if (e.key === 'Tab' || e.key === 'Enter') {
+                e.preventDefault();
+                if (activeSuggestion >= 0) {
+                    const selectedCommand = commandSuggestions[activeSuggestion];
+                    setValue(selectedCommand.prefix + ' ');
+                    setShowCommandPalette(false);
+                    
+                    setRecentCommand(selectedCommand.label);
+                    setTimeout(() => setRecentCommand(null), 3500);
+                }
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                setShowCommandPalette(false);
+            }
+        } else if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (value.trim()) {
+                handleSendMessage();
+            }
+        }
+    };
+
+    const handleSendMessage = () => {
+        if (value.trim()) {
+            startTransition(() => {
+                setIsTyping(true);
+                setTimeout(() => {
+                    setIsTyping(false);
+                    setValue("");
+                    adjustHeight(true);
+                }, 3000);
+            });
+        }
+    };
+
+    const handleAttachFile = () => {
+        const mockFileName = `file-${Math.floor(Math.random() * 1000)}.pdf`;
+        setAttachments(prev => [...prev, mockFileName]);
+    };
+
+    const removeAttachment = (index: number) => {
+        setAttachments(prev => prev.filter((_, i) => i !== index));
+    };
+    
+    const selectCommandSuggestion = (index: number) => {
+        const selectedCommand = commandSuggestions[index];
+        setValue(selectedCommand.prefix + ' ');
+        setShowCommandPalette(false);
+        
+        setRecentCommand(selectedCommand.label);
+        setTimeout(() => setRecentCommand(null), 2000);
+    };
+
+    return (
+        <div className="min-h-screen flex flex-col w-full items-center justify-center bg-transparent text-white p-6 relative overflow-hidden">
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full mix-blend-normal filter blur-[128px] animate-pulse" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full mix-blend-normal filter blur-[128px] animate-pulse delay-700" />
+                <div className="absolute top-1/4 right-1/3 w-64 h-64 bg-fuchsia-500/10 rounded-full mix-blend-normal filter blur-[96px] animate-pulse delay-1000" />
+            </div>
+            <div className="w-full max-w-2xl mx-auto relative">
+                <motion.div 
+                    className="relative z-10 space-y-12"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                    <div className="text-center space-y-3">
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                            className="inline-block"
+                        >
+                            <h1 className="text-3xl font-medium tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white/90 to-white/40 pb-1">
+                                How can I help today?
+                            </h1>
+                            <motion.div 
+                                className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                                initial={{ width: 0, opacity: 0 }}
+                                animate={{ width: "100%", opacity: 1 }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                            />
+                        </motion.div>
+                        <motion.p 
+                            className="text-sm text-white/40"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.3 }}
+                        >
+                            Type a command or ask a question
+                        </motion.p>
+                    </div>
+
+                    <motion.div 
+                        className="relative backdrop-blur-2xl bg-white/[0.02] rounded-2xl border border-white/[0.05] shadow-2xl"
+                        initial={{ scale: 0.98 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.1 }}
+                    >
+                        <AnimatePresence>
+                            {showCommandPalette && (
+                                <motion.div 
+                                    ref={commandPaletteRef}
+                                    className="absolute left-4 right-4 bottom-full mb-2 backdrop-blur-xl bg-black/90 rounded-lg z-50 shadow-lg border border-white/10 overflow-hidden"
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 5 }}
+                                    transition={{ duration: 0.15 }}
+                                >
+                                    <div className="py-1 bg-black/95">
+                                        {commandSuggestions.map((suggestion, index) => (
+                                            <motion.div
+                                                key={suggestion.prefix}
+                                                className={cn(
+                                                    "flex items-center gap-2 px-3 py-2 text-xs transition-colors cursor-pointer",
+                                                    activeSuggestion === index 
+                                                        ? "bg-white/10 text-white" 
+                                                        : "text-white/70 hover:bg-white/5"
+                                                )}
+                                                onClick={() => selectCommandSuggestion(index)}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ delay: index * 0.03 }}
+                                            >
+                                                <div className="w-5 h-5 flex items-center justify-center text-white/60">
+                                                    {suggestion.icon}
+                                                </div>
+                                                <div className="font-medium">{suggestion.label}</div>
+                                                <div className="text-white/40 text-xs ml-1">
+                                                    {suggestion.prefix}
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <div className="p-4">
+                            <Textarea
+                                ref={textareaRef}
+                                value={value}
+                                onChange={(e) => {
+                                    setValue(e.target.value);
+                                    adjustHeight();
+                                }}
+                                onKeyDown={handleKeyDown}
+                                onFocus={() => setInputFocused(true)}
+                                onBlur={() => setInputFocused(false)}
+                                placeholder="Ask zap a question..."
+                                containerClassName="w-full"
+                                className={cn(
+                                    "w-full px-4 py-3",
+                                    "resize-none",
+                                    "bg-transparent",
+                                    "border-none",
+                                    "text-white/90 text-sm",
+                                    "focus:outline-none",
+                                    "placeholder:text-white/20",
+                                    "min-h-[60px]"
+                                )}
+                                style={{
+                                    overflow: "hidden",
+                                }}
+                                showRing={false}
+                            />
+                        </div>
+
+                        <AnimatePresence>
+                            {attachments.length > 0 && (
+                                <motion.div 
+                                    className="px-4 pb-3 flex gap-2 flex-wrap"
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                >
+                                    {attachments.map((file, index) => (
+                                        <motion.div
+                                            key={index}
+                                            className="flex items-center gap-2 text-xs bg-white/[0.03] py-1.5 px-3 rounded-lg text-white/70"
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                        >
+                                            <span>{file}</span>
+                                            <button 
+                                                onClick={() => removeAttachment(index)}
+                                                className="text-white/40 hover:text-white transition-colors"
+                                            >
+                                                <XIcon className="w-3 h-3" />
+                                            </button>
+                                        </motion.div>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <div className="p-4 border-t border-white/[0.05] flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <motion.button
+                                    type="button"
+                                    onClick={handleAttachFile}
+                                    whileTap={{ scale: 0.94 }}
+                                    className="p-2 text-white/40 hover:text-white/90 rounded-lg transition-colors relative group"
+                                >
+                                    <Paperclip className="w-4 h-4" />
+                                    <motion.span
+                                        className="absolute inset-0 bg-white/[0.05] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                        layoutId="button-highlight"
+                                    />
+                                </motion.button>
+                                <motion.button
+                                    type="button"
+                                    data-command-button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowCommandPalette(prev => !prev);
+                                    }}
+                                    whileTap={{ scale: 0.94 }}
+                                    className={cn(
+                                        "p-2 text-white/40 hover:text-white/90 rounded-lg transition-colors relative group",
+                                        showCommandPalette && "bg-white/10 text-white/90"
+                                    )}
+                                >
+                                    <Command className="w-4 h-4" />
+                                    <motion.span
+                                        className="absolute inset-0 bg-white/[0.05] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                        layoutId="button-highlight"
+                                    />
+                                </motion.button>
+                            </div>
+                            
+                            <motion.button
+                                type="button"
+                                onClick={handleSendMessage}
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.98 }}
+                                disabled={isTyping || !value.trim()}
+                                className={cn(
+                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                                    "flex items-center gap-2",
+                                    value.trim()
+                                        ? "bg-white text-[#0A0A0B] shadow-lg shadow-white/10"
+                                        : "bg-white/[0.05] text-white/40"
+                                )}
+                            >
+                                {isTyping ? (
+                                    <LoaderIcon className="w-4 h-4 animate-[spin_2s_linear_infinite]" />
+                                ) : (
+                                    <SendIcon className="w-4 h-4" />
+                                )}
+                                <span>Send</span>
+                            </motion.button>
+                        </div>
+                    </motion.div>
+
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                        {commandSuggestions.map((suggestion, index) => (
+                            <motion.button
+                                key={suggestion.prefix}
+                                onClick={() => selectCommandSuggestion(index)}
+                                className="flex items-center gap-2 px-3 py-2 bg-white/[0.02] hover:bg-white/[0.05] rounded-lg text-sm text-white/60 hover:text-white/90 transition-all relative group"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                            >
+                                {suggestion.icon}
+                                <span>{suggestion.label}</span>
+                                <motion.div
+                                    className="absolute inset-0 border border-white/[0.05] rounded-lg"
+                                    initial={false}
+                                    animate={{
+                                        opacity: [0, 1],
+                                        scale: [0.98, 1],
+                                    }}
+                                    transition={{
+                                        duration: 0.3,
+                                        ease: "easeOut",
+                                    }}
+                                />
+                            </motion.button>
+                        ))}
+                    </div>
+                </motion.div>
+            </div>
+
+            <AnimatePresence>
+                {isTyping && (
+                    <motion.div 
+                        className="fixed bottom-8 mx-auto transform -translate-x-1/2 backdrop-blur-2xl bg-white/[0.02] rounded-full px-4 py-2 shadow-lg border border-white/[0.05]"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-7 rounded-full bg-white/[0.05] flex items-center justify-center text-center">
+                                <span className="text-xs font-medium text-white/90 mb-0.5">zap</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-white/70">
+                                <span>Thinking</span>
+                                <TypingDots />
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {inputFocused && (
+                <motion.div 
+                    className="fixed w-[50rem] h-[50rem] rounded-full pointer-events-none z-0 opacity-[0.02] bg-gradient-to-r from-violet-500 via-fuchsia-500 to-indigo-500 blur-[96px]"
+                    animate={{
+                        x: mousePosition.x - 400,
+                        y: mousePosition.y - 400,
+                    }}
+                    transition={{
+                        type: "spring",
+                        damping: 25,
+                        stiffness: 150,
+                        mass: 0.5,
+                    }}
+                />
+            )}
+        </div>
+    );
+}
+
+function TypingDots() {
+    return (
+        <div className="flex items-center ml-1">
+            {[1, 2, 3].map((dot) => (
+                <motion.div
+                    key={dot}
+                    className="w-1.5 h-1.5 bg-white/90 rounded-full mx-0.5"
+                    initial={{ opacity: 0.3 }}
+                    animate={{ 
+                        opacity: [0.3, 0.9, 0.3],
+                        scale: [0.85, 1.1, 0.85]
+                    }}
+                    transition={{
+                        duration: 1.2,
+                        repeat: Infinity,
+                        delay: dot * 0.15,
+                        ease: "easeInOut",
+                    }}
+                    style={{
+                        boxShadow: "0 0 4px rgba(255, 255, 255, 0.3)"
+                    }}
+                />
+            ))}
+        </div>
+    );
+}
+
+interface ActionButtonProps {
+    icon: React.ReactNode;
+    label: string;
+}
+
+function ActionButton({ icon, label }: ActionButtonProps) {
+    const [isHovered, setIsHovered] = useState(false);
+    
+    return (
+        <motion.button
+            type="button"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            onHoverStart={() => setIsHovered(true)}
+            onHoverEnd={() => setIsHovered(false)}
+            className="flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 rounded-full border border-neutral-800 text-neutral-400 hover:text-white transition-all relative overflow-hidden group"
+        >
+            <div className="relative z-10 flex items-center gap-2">
+                {icon}
+                <span className="text-xs relative z-10">{label}</span>
+            </div>
+            
+            <AnimatePresence>
+                {isHovered && (
+                    <motion.div 
+                        className="absolute inset-0 bg-gradient-to-r from-violet-500/10 to-indigo-500/10"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                    />
+                )}
+            </AnimatePresence>
+            
+            <motion.span 
+                className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-violet-500 to-indigo-500"
+                initial={{ width: 0 }}
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.3 }}
+            />
+        </motion.button>
+    );
+}
+
+const rippleKeyframes = `
+@keyframes ripple {
+  0% { transform: scale(0.5); opacity: 0.6; }
+  100% { transform: scale(2); opacity: 0; }
+}
+`;
+
+if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.innerHTML = rippleKeyframes;
+    document.head.appendChild(style);
+}
+
+
+
+
+demo.tsx
+import { AnimatedAIChat } from "@/components/ui/animated-ai-chat"
+
+export function Demo() {
+  return (
+    <div className="flex w-screen overflow-x-hidden">
+      <AnimatedAIChat />
+    </div>
+  );
+}
+
+```
+
+Install NPM dependencies:
+```bash
+lucide-react, framer-motion
+```
+
+Extend existing globals.css with this code:
+```css
+.lab-bg::before {
+  overflow: hidden;
+  max-width: 100vw;
+  max-height: 100vh;
+  box-sizing: border-box;
+}
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
+
+
+make sure to ask for pass and validate that pass the REV_PASS is in env and if the pass is right then only review is taken 
+and no image for review, Role, feedback, Rating and then check pass before showing 
