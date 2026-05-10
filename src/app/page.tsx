@@ -62,8 +62,8 @@ import { MenuContainer, MenuItem } from "@/components/ui/fluid-menu";
 import { Menu as MenuIcon, X } from "lucide-react";
 
 function Navbar() {
-  const handleHireMeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleHireMeClick = (e?: React.MouseEvent) => {
+    e?.preventDefault();
     const target = document.getElementById('contact');
     if (target) {
       const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
