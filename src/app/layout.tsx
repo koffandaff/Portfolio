@@ -20,8 +20,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Dhruvil Adroja | Portfolio",
     description: "Full-stack developer and security engineer crafting robust backends and dynamic frontends.",
-    url: "https://dhruvil.dev", // Note: Replace with actual domain if known
+    url: "https://dhruvilcs.vercel.app",
     siteName: "Dhruvil Adroja Portfolio",
+    images: [
+      {
+        url: "/Drivegate.png", // Using a project image as a preview
+        width: 1200,
+        height: 630,
+        alt: "Dhruvil Adroja Portfolio Preview",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
@@ -29,6 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Dhruvil Adroja | Full-stack Developer",
     description: "Full-stack developer and security engineer crafting robust backends and dynamic frontends.",
+    images: ["/Drivegate.png"],
   },
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, animate } from "framer-motion";
 import Image from "next/image";
 import { HeroFuturistic } from "@/components/ui/hero-futuristic";
 import { CardStack } from "@/components/ui/card-stack";
@@ -10,7 +10,7 @@ import { AnimatedDock } from "@/components/ui/animated-dock";
 import { TestimonialsColumn } from "@/components/ui/testimonials-columns-1";
 import FlowArt, { FlowSection } from "@/components/ui/story-scroll";
 import { AnimatedAIChat } from "@/components/ui/animated-ai-chat";
-import { Mail, PhoneIcon, MapPinIcon, ExternalLink, FileText, Code2, Database, Shield } from "lucide-react";
+import { Mail, ExternalLink, FileText, Code2, Database, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -62,14 +62,32 @@ import { MenuContainer, MenuItem } from "@/components/ui/fluid-menu";
 import { Menu as MenuIcon, X } from "lucide-react";
 
 function Navbar() {
+  const handleHireMeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const target = document.getElementById('contact');
+    if (target) {
+      const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      
+      animate(0, 1, {
+        duration: 1.8,
+        ease: [0.16, 1, 0.3, 1], // Quintic out easing for a very smooth feel
+        onUpdate: (latest) => {
+          window.scrollTo(0, startPosition + distance * latest);
+        }
+      });
+    }
+  };
+
   return (
     <nav className="absolute z-50 top-0 left-0 right-0 px-4 md:px-10 pt-6 flex items-center justify-between">
-      <div className="flex items-center gap-2 bg-neutral-900/90 backdrop-blur rounded-full pl-4 pr-6 py-3 border border-white/10 z-50">
+      <a href="#about" className="flex items-center gap-2 bg-neutral-900/90 backdrop-blur rounded-full pl-4 pr-6 py-3 border border-white/10 z-50 hover:bg-neutral-800 transition-colors">
         <svg viewBox="0 0 256 256" className="h-5 w-5 text-white" fill="currentColor">
           <path d="M 128 192 L 128 256 L 64.5 256 L 32 223 L 0 192 L 0 128 L 64 128 Z M 256 192 L 256 256 L 192.5 256 L 160 223 L 128 192 L 128 128 L 192 128 Z M 128 64 L 128 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 Z M 256 64 L 256 128 L 192.5 128 L 160 95 L 128 64 L 128 0 L 192 0 Z" />
         </svg>
         <span className="text-white text-sm font-medium tracking-tight">Dhruvil</span>
-      </div>
+      </a>
       
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center gap-4 bg-neutral-900/90 backdrop-blur rounded-full px-6 py-2 border border-white/10">
@@ -89,9 +107,19 @@ function Navbar() {
         <a href="https://docs.google.com/document/d/1b5B-nR_s-89PK2Q9Ssc58Plmmabhq0YI-2WpIYtSu-k/edit" target="_blank" rel="noreferrer" className="bg-sky-600 text-white border border-sky-400/50 text-sm font-medium rounded-full px-6 py-3 hover:bg-sky-500 transition-colors flex gap-2 items-center shadow-lg shadow-sky-500/20">
           <FileText size={16} /> View Resume
         </a>
-        <a href="#contact" className="bg-white text-black text-sm font-medium rounded-full px-6 py-3 hover:bg-neutral-200 transition-colors">
-          Hire Me
-        </a>
+        <motion.button 
+          onClick={handleHireMeClick}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.9, rotate: -1 }}
+          className="bg-white text-black text-sm font-medium rounded-full px-6 py-3 hover:bg-neutral-200 transition-all block shadow-lg shadow-white/10 relative overflow-hidden"
+        >
+          <motion.span 
+            initial={{ scale: 0, opacity: 0 }}
+            whileTap={{ scale: 4, opacity: 0.3, transition: { duration: 0.4 } }}
+            className="absolute inset-0 bg-sky-500 rounded-full pointer-events-none"
+          />
+          <span className="relative z-10">Hire Me</span>
+        </motion.button>
       </div>
 
       {/* Mobile Hamburger Menu */}
@@ -109,13 +137,20 @@ function Navbar() {
               </div>
             } 
           />
-          {["About", "Experience", "Projects", "Reviews", "Contact"].map((item) => (
+          {["About", "Experience", "Projects", "Reviews"].map((item) => (
             <MenuItem key={item}>
               <a href={`#${item.toLowerCase()}`} className="w-full text-left px-4 block text-sm">
                 {item}
               </a>
             </MenuItem>
           ))}
+          <MenuItem 
+            onClick={handleHireMeClick}
+          >
+            <span className="w-full text-left px-4 py-2 block text-sm text-white font-bold bg-sky-600 rounded-lg active:scale-95 transition-transform">
+              Hire Me
+            </span>
+          </MenuItem>
           <MenuItem>
              <a href="https://docs.google.com/document/d/1b5B-nR_s-89PK2Q9Ssc58Plmmabhq0YI-2WpIYtSu-k/edit" target="_blank" rel="noreferrer" className="w-full text-left px-4 block text-sm text-sky-400">
                 View Resume
@@ -128,18 +163,30 @@ function Navbar() {
 }
 
 function StickyResumeButton() {
+  const [visible, setVisible] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => setVisible(window.scrollY > 500);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <a 
+    <motion.a 
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -20 }}
+      transition={{ duration: 0.3 }}
       href="https://docs.google.com/document/d/1b5B-nR_s-89PK2Q9Ssc58Plmmabhq0YI-2WpIYtSu-k/edit" 
       target="_blank" 
       rel="noreferrer"
+      style={{ pointerEvents: visible ? "auto" : "none" }}
       className="fixed bottom-6 left-6 z-[60] group flex items-center justify-center bg-sky-600 text-white rounded-full p-3 md:p-4 shadow-2xl hover:bg-sky-500 transition-all border border-sky-400/50 hover:px-6 overflow-hidden"
     >
       <FileText size={24} className="md:group-hover:mr-2 flex-shrink-0 transition-all duration-300" />
       <span className="max-w-0 overflow-hidden md:group-hover:max-w-xs opacity-0 md:group-hover:opacity-100 transition-all duration-300 font-medium tracking-tight whitespace-nowrap">
         View Resume
       </span>
-    </a>
+    </motion.a>
   );
 }
 
@@ -210,7 +257,7 @@ function AboutSection() {
       >
         I am Dhruvil Adroja, a Full-stack developer and <strong className="text-white">Cyber Security Enthusiast</strong>. 
         I build secure backends with OAuth 2.0, TOTP, and encrypted data storage using Python, FastAPI, and PostgreSQL. 
-        My passion for security drives my work—in fact, my <strong className="text-sky-400">NullProtocol</strong> project was born out of this enthusiasm to automate vulnerability assessments. 
+        My passion for security drives my work, in fact, my <strong className="text-sky-400">NullProtocol</strong> project was born out of this enthusiasm to automate vulnerability assessments. 
         Whether building offline RAG apps, CI/CD pipelines, or sleek Next.js frontends, I love pushing web boundaries securely.
       </motion.p>
       
@@ -304,12 +351,12 @@ function ExperienceAndSkillsSection() {
             <div className="relative">
               <div className="absolute -left-[41px] top-1 h-5 w-5 rounded-full bg-sky-500 ring-4 ring-[#0C0C0C]" />
               <h3 className="text-2xl font-bold text-white">Full-Stack Trainee</h3>
-              <p className="text-sky-400 font-mono text-sm mt-1 mb-4">Nimblechapps — Oct 2025 – April 2026</p>
+              <p className="text-sky-400 font-mono text-sm mt-1 mb-4">Nimblechapps | Oct 2025 – April 2026</p>
               
               <ul className="space-y-3 text-white/70 list-disc pl-4 text-[15px] leading-relaxed">
                 <li>Studied PostgreSQL database design and REST API development using FastAPI.</li>
                 <li>Practiced backend concepts including token-based authentication (OAuth 2.0, TOTP), input validation with Pydantic, and rate-limited API routes.</li>
-                <li>Gained exposure to full project delivery phases — requirements, design, build, and staging.</li>
+                <li>Gained exposure to full project delivery phases: requirements, design, build, and staging.</li>
                 <li>Developed responsive and user-friendly web applications, assisting in frontend development using HTML, CSS, JavaScript, and Next.js.</li>
                 <li>Supported backend development and API integration using Node.js.</li>
                 <li>Tested, debugged, and optimized website performance while collaborating closely with the development team.</li>
@@ -429,7 +476,7 @@ function AchievementsSection() {
             src="/FolderArcharologist.png" 
             alt="FolderArchaeologist CLI" 
             fill
-            className="object-cover hover:scale-105 transition-transform duration-700" 
+            className="object-contain bg-neutral-900/50 hover:scale-105 transition-transform duration-700" 
           />
         </div>
       </div>
@@ -469,7 +516,7 @@ function ProjectsSection() {
     {
       num: "04",
       title: "AutoCodeDoc",
-      desc: "A documentation automation system using AST parsing — converts any Python codebase to a live, CI/CD-deployed API reference from docstrings. Self-updating architecture diagrams regenerate on every push.",
+      desc: "A documentation automation system using AST parsing: converts any Python codebase to a live, CI/CD-deployed API reference from docstrings. Self-updating architecture diagrams regenerate on every push.",
       stack: "Python, Sphinx, GitHub Actions, FastAPI",
       link: "https://koffandaff.github.io/AutoCodeDoc/sphinx/",
       github: "https://github.com/koffandaff",
@@ -486,7 +533,7 @@ function ProjectsSection() {
       <FlowArt aria-label="Projects Flow">
         {projects.map((proj, i) => (
           <FlowSection key={i} style={{ backgroundColor: '#0C0C0C', color: '#fff', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-400">{proj.num} — {proj.title}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-400">{proj.num} | {proj.title}</p>
             <hr className="my-[2vw] border-none border-t border-white/10" />
             <div className="flex flex-col md:flex-row gap-8 md:gap-10 flex-1 pb-10">
               <div className="w-full md:flex-1 flex flex-col">
@@ -520,7 +567,7 @@ function ProjectsSection() {
                     src={proj.image} 
                     alt={proj.title} 
                     fill
-                    className="object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-700 ease-out relative z-10" 
+                    className="object-contain bg-neutral-900/40 rounded-2xl group-hover:scale-[1.02] transition-transform duration-700 ease-out relative z-10" 
                   />
               </a>
             </div>
@@ -564,7 +611,7 @@ function TestimonialsSection() {
         {loaded && reviews.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4 text-white/30">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <p className="font-mono text-sm uppercase tracking-widest">No reviews yet — be the first below.</p>
+            <p className="font-mono text-sm uppercase tracking-widest">No reviews yet. Be the first below.</p>
           </div>
         ) : (
           <div className="flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] max-h-[600px] overflow-hidden">
@@ -588,7 +635,7 @@ function ReviewsSection() {
 }
 
 function ContactSection() {
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -602,10 +649,10 @@ function ContactSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      if (res.ok) {
-        setStatus('Message sent successfully!');
-        setFormData({ name: '', email: '', phone: '', message: '' });
-      } else {
+        if (res.ok) {
+          setStatus('Message sent successfully!');
+          setFormData({ name: '', email: '', message: '' });
+        } else {
         setStatus('Failed to send message.');
       }
     } catch {
@@ -617,7 +664,13 @@ function ContactSection() {
 
   return (
     <section id="contact" className="py-20 bg-[#0C0C0C] text-[#D7E2EA] border-t border-white/10 w-full overflow-hidden">
-      <div className="container mx-auto px-5 max-w-6xl">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="container mx-auto px-5 max-w-6xl"
+      >
         <h2 className="hero-heading font-black uppercase text-[clamp(2.5rem,9vw,120px)] leading-tight tracking-tight mb-10 md:mb-16 break-words text-center md:text-left">
           Get In Touch
         </h2>
@@ -635,34 +688,16 @@ function ContactSection() {
                 </div>
                 <div>
                   <h4 className="font-bold text-white">Email</h4>
-                  <p className="text-white/60 font-mono text-sm mt-1">dhruvillearning@gmail.com</p>
+                  <a href="mailto:dhruvillearning@gmail.com" className="text-white/60 hover:text-sky-400 font-mono text-sm mt-1 transition-colors">dhruvillearning@gmail.com</a>
                 </div>
               </li>
               <li className="flex items-start gap-4">
                 <div className="p-3 bg-white/5 rounded-full border border-white/10 text-sky-400">
-                  <PhoneIcon size={20} />
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                 </div>
                 <div>
-                  <h4 className="font-bold text-white">Phone</h4>
-                  <p className="text-white/60 font-mono text-sm mt-1">+91 9824998490</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-4">
-                <div className="p-3 bg-white/5 rounded-full border border-white/10 text-emerald-400">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.43 5.623 1.43h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white">WhatsApp</h4>
-                  <a href="https://wa.me/919824998490" target="_blank" rel="noreferrer" className="text-white/60 hover:text-emerald-400 font-mono text-sm mt-1 transition-colors">+91 9824998490</a>
-                </div>
-              </li>
-              <li className="flex items-start gap-4">
-                <div className="p-3 bg-white/5 rounded-full border border-white/10 text-sky-400">
-                  <MapPinIcon size={20} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-white">Location</h4>
-                  <p className="text-white/60 font-mono text-sm mt-1">Ahmedabad, Gujarat, India</p>
+                  <h4 className="font-bold text-white">LinkedIn</h4>
+                  <a href="https://linkedin.com/in/dhruvil-adroja" target="_blank" rel="noreferrer" className="text-white/60 hover:text-sky-400 font-mono text-sm mt-1 transition-colors">dhruvil-adroja</a>
                 </div>
               </li>
             </ul>
@@ -678,10 +713,7 @@ function ContactSection() {
                 <Label className="text-white/80">Email</Label>
                 <Input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="bg-black/50 border-white/20 text-white placeholder:text-white/30 focus:border-sky-500 h-12" placeholder="john@example.com" />
               </div>
-              <div className="flex flex-col gap-2">
-                <Label className="text-white/80">Phone</Label>
-                <Input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="bg-black/50 border-white/20 text-white placeholder:text-white/30 focus:border-sky-500 h-12" placeholder="+1 (555) 000-0000" />
-              </div>
+
               <div className="flex flex-col gap-2">
                 <Label className="text-white/80">Message</Label>
                 <Textarea required value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="bg-black/50 border-white/20 text-white placeholder:text-white/30 focus:border-sky-500 min-h-[150px] resize-none" placeholder="Tell me about your project..." />
@@ -693,7 +725,7 @@ function ContactSection() {
             </form>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
